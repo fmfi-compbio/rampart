@@ -83,6 +83,10 @@ const setUpIOListeners = (socket) => {
         const pipelineRunner = global.pipelineRunners[key];
         pipelineRunner.addToQueue(createJob({key, sampleName}));
     });
+    socket.on('triggerProcessingNotPerSample', ({key}) => {
+        const pipelineRunner = global.pipelineRunners["barcode_strand_match"];
+        pipelineRunner.addToQueue(createJob({key, null:null}));
+    });
     socket.on('terminatePostProcessing', ({key}) => {
         global.pipelineRunners[key].terminateCurrentlyRunningJob();
     });
