@@ -72,12 +72,13 @@ if config.get("minimum_identity"):
 else:
     minimum_identity= ""
 
+
 ##### Target rules #####
 
 rule all:
     input:
-        expand(config["output_path"]+ "/{filename_stem}.csv", filename_stem=config["filename_stem"])
-
+        csv = expand(config["output_path"]+ "/{filename_stem}.csv", filename_stem=config["filename_stem"]),
+	
 ##### Modules #####
 include: "rules/unzip.smk"
 include: "rules/demultiplex.smk"

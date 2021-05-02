@@ -1,0 +1,20 @@
+
+##### Configuration #####
+
+#print("\nConfig object in Snakefile:")
+#[print("\t{} - {}".format(k, v)) for k,v in config.items()]
+
+# trim trailing slashes from paths to avoid snakemake complaining of double '/' in paths
+config["path"]=config["annotated_path"].rstrip("/")
+config["fastq_path"]=config["basecalled_path"].rstrip("/")
+
+##### Target rules #####
+
+rule all:
+    input:
+        path = config["path"],
+        mutations_csv = config["path"]+"/results/mutations.json"
+
+##### Modules #####
+include: "rules/count_and_compare.smk"
+

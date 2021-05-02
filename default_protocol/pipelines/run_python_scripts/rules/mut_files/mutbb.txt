@@ -1,0 +1,43 @@
+# https://www.cogconsortium.uk/wp-content/uploads/2020/12/Report-1_COG-UK_20-December-2020_SARS-CoV-2-Mutations_final_updated2.pdf
+# https://www.nytimes.com/interactive/2021/health/coronavirus-variant-tracker.html
+
+# UK B.1.1.7 20B/501Y.V1 (A23063T spike N501Y)
+# https://virological.org/t/preliminary-genomic-characterisation-of-an-emergent-sars-cov-2-lineage-in-the-uk-defined-by-a-novel-set-of-spike-mutations/563
+# https://www.biorxiv.org/content/10.1101/2021.02.14.431043v2.full.pdf
+UK 5 C3267T C5388A T6954C A23063T C23271A C23604A C23709T T24506G G24914C C27972T G28048T A28111G C28977T GTCTGGTTTT11287G ATACATG21764A TTTA21990T G28280C A28281T T28282A
+
+# czech strain B.1.258
+CZ 3 G12988T G15598A G18028T T24910C T26972C ATACATG21764A
+
+# eu2 B.1.160
+EU2 3 G9526T G15766T A16889G G17019T G22992A T26876C
+
+# eu1  B.1.177
+EU1 3 C22227T T445C C6286T C28932T G29645T G21255C C26801G
+
+# south africa 20H/501Y.V2 = B.1.351  (briti maju z toho 23063 = S N501Y 
+South.Afr 3 G174T G5230T C5100T G23012A A21801C A23063T C28253T C23664T
+
+# brazil 20J/501Y.V3 P.1 (21614 S L18F is recurrent mutaion, also present in ukba-716,717 eu1 and other eu1)
+BrazilP1 3 T733C C2749T C3828T A5648C C12778T C13860T G17259T C21614T C21621A
+
+# another brazil P.2 20B/S.484K (=23012) - beware 28975 is also in EU2; also 23012, 28253 overlap with s.afr, 29754 in ukba318
+BrazilP2 3 T10667G C11824T A12964G G23012A C28253T G28628T G28975T C29754T
+
+# ukba-318,409,412
+UKBA318 2 G12824A C25777T G26062T C29754T
+
+# only E484K G23012A
+E484K 1 G23012A
+
+# California S  L452R B.1.427, B.1.429
+California 3 G17014T G21600T G22018T T22917G C26681T A28272T C29362T
+
+# B.1.525 Nigeria E484K ΔH69/ΔV70 deletion N439K Y453F F888L A67V
+Nigeria 3 C1498T A1807G G2659A C6285T T8593C C14407T A21717G C21762T T24224C
+
+# B.1.526 New York https://www.medrxiv.org/content/10.1101/2021.02.26.21251868v1 E484K  L5F, T95I, D253G, D614G, and A701V (sometimes S477N )
+NY 3 T9867C C25517T C27925T A20262G C21575T C21846T A22320G C23664T C28869T
+
+# india  E484Q=G23012C and L452R=U22917G related to Singapore/233/2021? (no indian in nextstrain)
+India 2 G23012C T22917G

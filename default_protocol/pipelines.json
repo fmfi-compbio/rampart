@@ -1,9 +1,20 @@
 {
 	"annotation": {
 		"name": "Annotate reads",
-		"path": "pipelines/demux_map",
+		"path": "pipelines/demux_map_covid",
 		"config_file": "config.yaml",
 		"requires": [
+			{
+				"file": "references.fasta",
+				"config_key": "references_file"
+			}
+		]
+	},
+	"barcode_strand_match":{
+		"name": "Match strands to barcodes",
+		"path": "pipelines/run_python_scripts",
+		"config_file": "config.yaml",
+		"requires":[
 			{
 				"file": "references.fasta",
 				"config_key": "references_file"

@@ -23,6 +23,7 @@ barcode_threshold: 80
 barcode_diff: 5
 threads: 2
 
+
 ##### Filtering options #####
 
 min_read_length: 0
