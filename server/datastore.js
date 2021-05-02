@@ -269,19 +269,6 @@ function getSampleVariants(){
         //warn(`Could not find mutations file, ${fileToParse}, doesn't exist - skipping.`);
         return variantData;
     } 
-    /*const variants = dsv.csvParse(fs.readFileSync(fileToParse).toString());
-    variants.forEach((d, index) => {
-        if(!(d.barcode in variants)){
-            variantData[d.barcode]={
-                variantName: d.strand,
-                mutations: split_mutations(d.mutations)
-            }
-        }
-        else{
-            let prev = variantData[d.barcode].variantName;
-            variantData[d.barcode].variantName = prev + " or " + d.starnd; //zatial pre alternativne varianty ignorujem pozicie mutacii
-        }
-    });*/
     let file_content =fs.readFileSync(fileToParse).toString();
     let regex = /\,(?!\s*?[\{\[\"\'\w])/g;
     file_content = file_content.replace(regex, '');

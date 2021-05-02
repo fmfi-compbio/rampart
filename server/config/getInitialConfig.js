@@ -127,13 +127,10 @@ function setUpPathCascade(args) {
     if (userProtocol) {
         const userProtocolPath = getAbsolutePath(userProtocol, {relativeTo: process.cwd()});
         //verbose("config", `Protocol path: ${userProtocolPath}`);
-        //log("Protocol path:"+ userProtocolPath);
         pathCascade.push(normalizePath(userProtocolPath));
     }
 
     pathCascade.push("./"); // add current working directory
-
-    //log("path cascade:"+pathCascade);
 
     pathCascade.forEach((p, i) => {
         verbose("config", `path cascade ${i}: ${p}`);

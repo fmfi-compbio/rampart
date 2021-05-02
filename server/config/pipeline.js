@@ -56,14 +56,14 @@ function setUpPipelines(config, args, pathCascade) {
 
                 parseAnnotationRequires(pipeline, config, pathCascade, args)
                 pipeline.configOptions = mergeAdditionalAnnotationOptions(pipeline.configOptions, config, args);
-               // if any samples have been set (and therefore associated with barcodes) then we limit the run to those barcodes
-               if (config.run.samples.length) {
-                if (pipeline.configOptions.limit_barcodes_to) {
-                    warn("Overriding your `limit_barcodes_to` options to those set via the barcode-sample mapping.")
-                }
-                pipeline.configOptions.limit_barcodes_to = [...getBarcodesInConfig(config)].join(',');
-                verbose("config", `Limiting barcodes to: ${pipeline.configOptions.limit_barcodes_to}`)
-            } 
+                // if any samples have been set (and therefore associated with barcodes) then we limit the run to those barcodes
+                if (config.run.samples.length) {
+                    if (pipeline.configOptions.limit_barcodes_to) {
+                        warn("Overriding your `limit_barcodes_to` options to those set via the barcode-sample mapping.")
+                    }
+                    pipeline.configOptions.limit_barcodes_to = [...getBarcodesInConfig(config)].join(',');
+                    verbose("config", `Limiting barcodes to: ${pipeline.configOptions.limit_barcodes_to}`)
+                } 
                 // set up the runner
                 pipelineRunners[key] = new PipelineRunner({
                     config: pipeline,
@@ -72,8 +72,7 @@ function setUpPipelines(config, args, pathCascade) {
                     },
                     queue: true
                 });
-            } 
-            else if(key == "barcode_strand_match"){
+            } else if(key == "barcode_strand_match"){
                 checkPipeline(config, key, pipeline);
                 if (pipeline.ignore) return;
                 parseAnnotationRequires(pipeline, config, pathCascade, args) 
@@ -85,8 +84,7 @@ function setUpPipelines(config, args, pathCascade) {
                     onSuccess: () => {global.NOTIFY_CLIENT_DATA_UPDATED();},
                     queue: true
                 });
-            }
-            else {
+            } else {
                 /* a "normal" / non-annotation pipeline */
                 if (!pipeline.run_per_sample) {
                     /* we currently only use pipelines which are `run_per_sample` */

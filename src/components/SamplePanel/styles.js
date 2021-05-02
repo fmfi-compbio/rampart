@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-//370px
+
 const SamplePanelContainer = styled.div`
     position: relative;
     width: 98%;
