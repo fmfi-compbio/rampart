@@ -22,6 +22,7 @@ import { getPostProcessingMenuItems, PostProcessingRunner } from "./postProcessi
 import { IoIosExpand, IoIosContract } from "react-icons/io";
 import { TimerContext } from "../App";
 import SamplePanelContainer, {ChartContainer, ExpandIconContainer} from "./styles";
+import MutationsTree from "../Charts/mutationsTree";
 
 const ExpandChart = ({handleClick}) => {
   return (
@@ -41,7 +42,7 @@ const ContractChart = ({handleClick}) => {
 /**
  * A panel representing an individual sample
  */
-const SamplePanel = ({sampleName, sampleData, config, reference, socket, panelExpanded, setPanelExpanded}) => {
+const SamplePanel = ({sampleName, sampleData, sampleVariant, config, reference, socket, panelExpanded, setPanelExpanded}) => {
 
   /* -----------    STATE MANAGEMENT    ------------------- */
   const [showSinglePanel, setShowSinglePanel] = useState(false);
@@ -73,6 +74,13 @@ const SamplePanel = ({sampleName, sampleData, config, reference, socket, panelEx
   const sampleColour = sampleConfig ? sampleConfig.colour : "#FFFFFF";
   const sampleColours = {}; /* dataformat needed by <CoveragePlot> */
   sampleColours[sampleName] = sampleColour;
+
+  var variant_name="";
+    for(const variant of sampleVariant){
+      variant_name+=variant.name+" ";
+    }
+
+  const panelExpandedHeight = (variant_name==="") ? "370px" : "740px"; 
 
   /* ------------- MENU OPTIONS -------------------- */
   const menuItems = [];
@@ -124,7 +132,7 @@ const SamplePanel = ({sampleName, sampleData, config, reference, socket, panelEx
             (<ExpandChart handleClick={() => goToChart("coverageOverTime")}/>)
         }
       />
-    )/*,
+    ),/*,
     refSimilarity: (
         <RefSimilarity
             title={"Read mapping similarities"}
@@ -140,15 +148,29 @@ const SamplePanel = ({sampleName, sampleData, config, reference, socket, panelEx
         }
         />
     )*/
+    mutationsTree: (
+      <MutationsTree
+       data={sampleVariant}
+       renderProp={ showSinglePanel === "mutationsTree" ?
+            (<ContractChart handleClick={() => goToChart(false)}/>) :
+            (<ExpandChart handleClick={() => goToChart("mutationsTree")}/>)
+        }
+      />
+    )
 
   };
 
   /* ---------------   WHAT CHARTS DO WE RENDER?   -------------- */
   const renderCharts = () => {
+  
     if (!panelExpanded) return null;
-    const chartsToShow = showSinglePanel ?
-    charts[showSinglePanel] :
-    [charts.coverage, charts.readLength, charts.coverageOverTime, charts.refSimilarity];
+    var chartsToShow =[];
+    if(variant_name!==""){
+      chartsToShow = showSinglePanel ? charts[showSinglePanel] : [charts.coverage, charts.readLength, charts.coverageOverTime, charts.refSimilarity, charts.mutationsTree];
+    }
+    else{
+      chartsToShow = showSinglePanel ? charts[showSinglePanel] : [charts.coverage, charts.readLength, charts.coverageOverTime, charts.refSimilarity];
+    }
     return (
     <ChartContainer>
         {chartsToShow}
@@ -161,12 +183,14 @@ const SamplePanel = ({sampleName, sampleData, config, reference, socket, panelEx
     <SamplePanelContainer
       panelExpanded={panelExpanded}
       sampleColour={sampleColour}
+      panelExpandedHeight={panelExpandedHeight}
     > 
       <TimerContext.Consumer>
         {(timeSinceLastDataUpdate) => (
           <InfoRow
             sampleName={sampleName}
             sampleData={sampleData}
+            sampleVariant={sampleVariant}
             sampleColour={sampleColour}
             menuItems={menuItems}
             handleClick={() => setPanelExpanded(sampleName, !panelExpanded)}

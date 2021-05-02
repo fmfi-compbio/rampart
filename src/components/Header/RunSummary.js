@@ -16,8 +16,11 @@ import React from 'react';
 import {makeTimeFormatter} from "../../utils/commonFunctions";
 
 const timeFormatter = makeTimeFormatter();
-
 const RunSummary = ({combinedData, timeSinceLastDataUpdate}) => {
+  //const fs = combinedData ? combinedData.filesSeen : 0;
+  //const num_of_files = " seen " + fs + " files ";
+  //const processed_files = combinedData ? combinedData.processedCount/4000 : 0;
+  //const num_of_files = processed_files + " files (4000 reads each) processed";
   const readsMsg = combinedData ? `${combinedData.mappedCount} reads mapped | ${combinedData.processedCount} processed ` : "no data yet ";
   const rateMsg = combinedData && combinedData.processedRate >= 0 ?
       `${Math.round(combinedData.processedRate)} reads/sec` : "calculating rate...";

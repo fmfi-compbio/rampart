@@ -91,10 +91,11 @@ class App extends Component {
     });
     socket.on("data", (response) => {
       console.log("App got new data", response);
-      const { dataPerSample, combinedData} = response;
+      const {dataPerSample, combinedData, variantData} = response;
       this.setState({
         dataPerSample,
         combinedData,
+        variantData,
         mainPage: "viz",
         timeSinceLastDataUpdate: 0
       });

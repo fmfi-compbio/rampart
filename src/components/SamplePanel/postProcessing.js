@@ -17,6 +17,7 @@ import PropTypes from "prop-types";
 import Modal from "../modal";
 import { IoMdPlay } from "react-icons/io";
 import ModernButton from "../reusable/ModernButton";
+import SmallerModernButton from "../reusable/SmallerModernButton";
 
 export const getPostProcessingMenuItems = (config, setPostProcessingState) => {
     return Object.keys(config.pipelines)
@@ -49,9 +50,30 @@ export const PostProcessingRunner = ({pipeline, dismissModal, socket, sampleName
     )
 };
 
+export const PostProcessingNotPerSample = ({name, pipelinekey, socket}) => {
+    const send = () => {
+        console.log("triggerProcessingNotPerSample", name)
+        socket.emit('triggerProcessingNotPerSample', {pipelinekey});
+    }
+
+    return (
+        <SmallerModernButton onClick={send}>
+                    <IoMdPlay/>
+                    TRIGGER
+        </SmallerModernButton>
+    )
+
+};
+
 PostProcessingRunner.propTypes = {
     dismissModal: PropTypes.func.isRequired,
     sampleName: PropTypes.string.isRequired,
     pipeline: PropTypes.object.isRequired,
+    socket: PropTypes.object.isRequired
+};
+
+PostProcessingNotPerSample.propTypes = {
+    name: PropTypes.string.isRequired,
+    pipelinekey: PropTypes.string.isRequired,
     socket: PropTypes.object.isRequired
 };

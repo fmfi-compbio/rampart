@@ -5,6 +5,7 @@ const Container = styled.div`
     position: absolute;
     max-width: 85%;
     overflow-x: scroll;
+    overflow-y: scroll;
     height: 95%;
     color: ${(props) => props.theme.articYellow};
     background: ${(props) => props.theme.articGreen};

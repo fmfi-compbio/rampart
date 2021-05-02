@@ -15,6 +15,7 @@
 import React, {useState, useReducer, useEffect, useCallback} from 'react';
 import { IoIosArrowDropdownCircle, IoIosArrowDropupCircle, IoIosAlert, IoIosCloseCircle } from "react-icons/io";
 import { PipelineContainer } from "./styles";
+import { PostProcessingNotPerSample } from "../SamplePanel/postProcessing";
 
 // const messageHeight = 25; // px. Dynamically set here not via CSS.
 // const maxMessagesPerPipeline = 10;
@@ -45,10 +46,23 @@ const Pipeline = ({pipelineKey: key, data, socket}) => {
         </span>
 
         <h3>{`Pipeline: ${data.get("name")}`}</h3>
-
-
+       
         <span>{status}</span>
-        
+
+
+        {status === "running" ? null :
+          key === "barcode_strand_match" ? (
+            <span className="rightIcon">
+            <PostProcessingNotPerSample 
+              name = {data.get("name")}
+              pipelinekey = {key}
+              socket = {socket}
+            />
+            </span>
+        ) : null 
+        }
+
+
         {status === "running" ? (
           <span className="rightIcon clickable">
             <IoIosCloseCircle className="icon150" color="#e06962" onClick={terminate}/>
@@ -57,7 +71,8 @@ const Pipeline = ({pipelineKey: key, data, socket}) => {
           <span className="rightIcon">
             <IoIosAlert className="icon150" color="#F6EECA" />
           </span>
-        ) : null }
+        ) : null 
+        }
 
 
       </div>
