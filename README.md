@@ -4,7 +4,7 @@ Read Assignment, Mapping, and Phylogenetic Analysis in Real Time.
 
 RAMPART runs concurrently with MinKNOW and shows you demuxing / mapping results in real time.
 
-![](docs/images/main.png)
+![](docs/img/main.png)
 
 
 ## Motivation
@@ -13,29 +13,12 @@ Furthermore, the small size of many pathogens mean that insightful sequence data
 RAMPART run concurrently with MinION sequencing of such pathogens.
 It provides a real-time overview of genome coverage and reference matching for each barcode.
 
-RAMPART was originally designed to work with amplicon-based primer schemes (e.g. for [ebola](https://github.com/artic-network/primer-schemes)), but this isn't a requirement.
-
-
+This version of RAMPART is designed for ... <!-- #todo -->
 
 ## Documentation
 
-* [Installation](docs/installation.md)
-* [Running an example dataset & understanding the visualisations](docs/examples.md)
+* [Installation](docs/installation.md) <!-- * [Running an example dataset & understanding the visualisations](docs/examples.md) -->
 * [Setting up for your own run](docs/setting-up.md)
 * [Configuring RAMPART using protocols](docs/protocols.md)
-* [Debugging when things don't work](docs/debugging.md)
-* [Notes relating to RAMPART development](docs/developing.md)
+* [Covid strand matching pipeline](docs/barcode_strand_match.md)
 
-
-
-
-## Status
-
-RAMPART is in development with a publication forthcoming.
-Please [get in contact](https://twitter.com/hamesjadfield) if you have any issues, questions or comments.
-
-
-## RAMPART has been deployed to sequence:
-
-* [Yellow Fever Virus in Brazil](https://twitter.com/Hill_SarahC/status/1149372404260593664)
-* [ARTIC workshop in Accra, Ghana](https://twitter.com/george_l/status/1073245364197711874)
