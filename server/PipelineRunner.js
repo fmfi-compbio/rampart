@@ -300,9 +300,11 @@ function getTimeNow() {
 function createJob({key, sampleName}) {
     let job = {};
     /* basic information */
-    job.sample_name = sampleName;
-    job.barcodes = global.datastore.getBarcodesForSampleName(sampleName);
-    job.samples = `{${job.sample_name}: [${job.barcodes}]}`;
+    if(sampleName){ //run-per-sample
+        job.sample_name = sampleName;
+        job.barcodes = global.datastore.getBarcodesForSampleName(sampleName);
+        job.samples = `{${job.sample_name}: [${job.barcodes}]}`;
+    }
     /* if filtering in place, then specify this */
     if (Object.keys(global.config.display.filters).length) {
         job = {...job, ...global.config.display.filters};
