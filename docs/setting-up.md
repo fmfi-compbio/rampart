@@ -10,16 +10,6 @@ These will be in the format of comma-seperated-value (CSV) files with one for ea
 
 The runtime directory can also contain a configuration file called `run_configuration.json` to provide details about the MinION run being performed. 
 
-
-Here's the example of provided `run_configuration.json` (located in `covid/run_configuration.json`):
-
-```json
-{
-  "title": "covid run",
-  "basecalledPath": "fastq/pass"
-}
-```
-
 This file can specify the basecalled read path (as an alternative to the command line `--basecalledPath`), and a title for the run
 
 *In the original version of RAMPART, you can specify a list of samples, their names and the barcodes that are being used to distinguish them. However, this feature will not work properly with this version of RAMPART - you will not see the variants matched to the renamed barcodes.*
@@ -33,8 +23,6 @@ This is a directory of files with specified names and formats that tell RAMPART 
 It can also contain custom scripts to alter the behaviour or processing of the data.*
 
 *Normally, the protocol directory is virus-specific, not run-specific.*
-
-For sars-cov-2 virus, you already have all these files in the covid_protocol folder, which is the default one for this version of RAMPART
 
 
 ### Define your own protocol

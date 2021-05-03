@@ -22,96 +22,7 @@ Each file is described in more detail below, but briefly the five files are:
 
 Typically, you would provide RAMPART with a virus-specific protocol directory containing the first four files, and the run-specific information would be either in a JSON in the current working directory or specified via command line args.
 
-
----
-## How RAMPART finds configuration files to build up the protocol
-
-RAMPART searches a number of folders in a cascading manner in order to build up the protocol for the run.
-Each time it finds a matching JSON, it adds it into the overall protocol, overriding the previous options as necessary _(technically we're doing a shallow merge of the JSONs)_. Folders are searched in the following order:
-
-1. RAMPART's default protocol. See below for what defaults this sets.
-2. Run specific protocol directory. This is set either with `--protocol <path>` or via the `RAMPART_PROTOCOL` environment variable.
-3. The current working directory.
-
----
-## Protocol file: `protocol.json`
-
-This JSON format file contains some basic information about the protocol.
-For instance, this is the protocol description for the provided SARS-CoV-2 example:
-
-```json
-{
-  "name": "SARS-CoV-2 virus protocol v0.1",
-  "description": "Amplicon based sequencing of SARS-CoV-2 virus.",
-  "url": "http://artic.network/",
-  "annotationOptions": {
-   "require_two_barcodes": "true",
-   "barcode_set": "pcr"
-  }
-}
-```
-
-You may also set `annotationOptions` and `displayOptions` in this file (see below for more info).
-
-
----
-## Protocol file: `genome.json`
-
-This JSON format file describes the structure of the genome (positions of all the genes) and is used by RAMPART to visualize the coverage across the genome.
-
-
-```json
-{
-	"label": "SARS-CoV-2",
-	"length": 29903,
-	"genes": {
-		"ORF1ab": {
-			"start": 266,
-			"end": 21555,
-			"strand": 1
-		},
-		"S": {
-			"start": 21563,
-			"end": 25384,
-			"strand": 1
-		},
-    ...
-  },
-  	"reference": {
-		"label": "SARS-CoV-2",
-		"accession": "MN908947.3",
-		"sequence": "attaaaggttt..."
-  }
-}
-```
-
-
-
----
-## Protocol file: `primers.json`
-
-
-The primer scheme description is defined via the `primers.json` file in the protocol directory.
-
-This JSON format file describes the locations of the amplicons. The coordinates are in reference to the genome description in the `genome.json` file and will be used by RAMPART to draw the the amplicons in the coverage plots. If it is not present then no amplicons will be shown in RAMPART.
-
-> These data are only used for display, not analysis.
-
-```json
-{
-	"name": "SARS-CoV-2 primer scheme 2000bp",
-        "amplicons": [
-		[30, 2079],
-		[3580, 5548],
-        .
-        .
-        . 
-        [22850, 24812],
-		[26386, 28351]
-        ]
-}
-
-```
+You can find more information about `protocol.json`, `genome.json`,  `primers.json` and `run_configuration.json` files in documentation of original version of RAMPART.
 
 ---
 ## Protocol file: `pipelines.json`
@@ -219,7 +130,7 @@ Furthermore, the annotation pipeline can use the `requires` property which speci
 The default pipeline will watch for new `.fastq` files appearing in the `basecalled_path` (usually the `fastq/pass` folder in the MinKNOW run's data folder). Each `.fastq` file will contain 4000 reads by default. The pipeline will then de-multiplex the reads looking for any barcodes that were used when creating the sequencing library. It then maps each read to a set of reference genomes, provided by the `protocol` or by the user, recording the closest reference genome and the mapping coordinates of the read on that reference. This information is then recorded for each read in a comma-seprated `.csv` text file with the same file name stem as the original `.fastq` file. It is this file which is then read by RAMPART and the data visualised.
 
 For **de-multiplexing**, The `annotation` pipeline currently uses a customised version of `porechop` that was installed from git when RAMPART was installed. `porechop` is an adapter trimming and demultiplexing package written by Ryan Wick. It's original source can be found at [https://github.com/rrwick/Porechop](https://github.com/rrwick/Porechop). For RAMPART the authors have modified it to focus on demultiplexing, making it faster. The forked, modified version can be found at [https://github.com/artic-network/Porechop](https://github.com/artic-network/Porechop).
-For covid version of RAMPART we have modified it so that we could fix a problem with 96 pcr barcode set. The forked, modified version can be found at [...] <!--- todo pridat link -->
+For this version of RAMPART we have modified it so that we could fix a problem with 96 pcr barcode set. Our forked, modified version can be found at [https://github.com/fmfi-compbio/Porechop](https://github.com/fmfi-compbio/Porechop)
 
 If demuxing has been done by guppy, then the **de-multiplexing** step is skipped.
 
