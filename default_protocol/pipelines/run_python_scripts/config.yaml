@@ -1,7 +1,0 @@
-##### Mapping reference panel #####
-
-references_file: references.fasta
-
-###mutations###
-coverage_threshold: 10
-mutations_file: mutbb.txt

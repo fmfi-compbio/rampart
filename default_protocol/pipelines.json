@@ -1,7 +1,7 @@
 {
 	"annotation": {
 		"name": "Annotate reads",
-		"path": "pipelines/demux_map_covid",
+		"path": "../pipelines/default_pipeline/demux_map",
 		"config_file": "config.yaml",
 		"requires": [
 			{
@@ -10,20 +10,9 @@
 			}
 		]
 	},
-	"barcode_strand_match":{
-		"name": "Match strands to barcodes",
-		"path": "pipelines/run_python_scripts",
-		"config_file": "config.yaml",
-		"requires":[
-			{
-				"file": "references.fasta",
-				"config_key": "references_file"
-			}
-		]
-	},
 	"export_reads": {
 		"name": "Export reads",
-		"path": "pipelines/bin_to_fastq",
+		"path": "../pipelines/default_pipeline/bin_to_fastq",
 		"config_file": "config.yaml",
 		"run_per_sample": true
 	}
