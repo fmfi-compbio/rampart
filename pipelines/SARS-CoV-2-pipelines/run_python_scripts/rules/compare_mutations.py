@@ -34,7 +34,6 @@ def load_file(file_path, reference):
             G = int(l[4])
             T = int(l[5])
             if not barcode in barcode_dict:
-                #print("found new barcode! "+barcode)
                 barcode_dict[barcode] = [[0 for _ in letters] for _ in reference]
             barcode_dict[barcode][position][0]+=A
             barcode_dict[barcode][position][1]+=C
@@ -43,8 +42,7 @@ def load_file(file_path, reference):
     return barcode_dict
 
 
-def load_mutations(mutations_path):    
-    #nacitanie mut.txt
+def load_mutations(mutations_path):    #loading .txt file containing mutations for each variant
     
     mutations = Tree("root", 0)
     stack = []
@@ -73,120 +71,65 @@ def load_mutations(mutations_path):
                 maybeparent = child            
 
     return mutations
-            
-def guess(barcode, threshold, strand):
-    pocet = 0
-    single_muts = [] #mutacie sconcatenovane cez & (budu)
-    
-    for mut in strand.data:
-        #print(mut)
-        if mut[2].isdigit():
-            position = int(mut[1:len(mut)-1])-1
-            
-            #toto treba, inak vyhodi podmienku ze je mimo indexu :|        
-            if position < 0 or position >= len(barcode):
-                continue
-            
-            m1 = barcode[position][l2n[mut[0]]] #pocet baz zhodnych s referenciou
-            m2 = barcode[position][l2n[mut[len(mut)-1]]]; #pocet baz zhodnych s mutaciou
-            reads_coverage = barcode[position][0]+barcode[position][1]+barcode[position][2]+barcode[position][3]
-                   
-            if m1 < m2 and reads_coverage >= threshold: #ak bolo na danu poziciu namapovanych uz aspon threshold baz a je viac tych zmutovanych                         
-                pocet += 1
-                single_muts.append(mut)
-                
-    #ak je to pravdepodobne tato mutacie, zisti pre submutacie, ci sedia nejake
-    if pocet >= strand.min_num:
-        if (len(strand.children) > 0):
-            strands = ""
-            pocet_subov = 0
-            for strandik in strand.children:
-                stran, poc, sinmut = guess(barcode, threshold, strandik)
-                if (stran != ""):
-                    if pocet_subov > 0:
-                        strands += "/"+stran #dalsia vetva submutacii, oddelena cela '/'
-                    else:
-                        strands += stran
-                    pocet_subov += 1
-                    pocet += poc
-                    single_muts += sinmut
-    	    	
-            if pocet_subov > 1:
-                return strand.name + ":" + strands, pocet, single_muts #ak sa to vetvi, da ':'
-            elif pocet_subov > 0:
-                return strand.name + "." + strands, pocet, single_muts #ak sa to nevetvi, deti oddelene ','
-                
-        return strand.name, pocet, single_muts
-    	
-    else:
-    	return "", 0, ""
 
-    
-def find_variants(barcode_dict, mutacie, csv, threshold):
-    #barcode dict - nacitany dictionary zo suboru (pocty ACGT na jednotlivych poziciach v jednotlivych barkodoch)
-    #mutacie - nacitany subor mut.txt (load_mutations)
-    #print(barcode_dict)
-    print("barcode,strand,support,mutations", file=csv)
-    for barcode in barcode_dict:
-        for strand in mutacie.children:
-            strands, pocet, single_mut = guess(barcode_dict[barcode], threshold, strand) 
-            
-            if strands == "":
-                continue
-                
-            sinmut = "&".join(single_mut)
-            string = barcode +","+ strands +","+ str(pocet)+","+ sinmut
-            print(string, file=csv)           
-
-
-def find_variants2(barcode_dict, mutacie, json, threshold): #podobne ako find_variants, len chceme vysledok v jason formate
+def find_variants(barcode_dict, variants, json, threshold): #looking for possible variants for a barcode
+    barcode_strings=[]
     json_string='['
     for barcode in barcode_dict:
-        json_string+='{"barcode":"'+barcode+'","mutations":[' #zaciatok barkodu
-        for strand in mutacie.children:
-            json_string+= guess2(barcode_dict[barcode], threshold, strand) 
-        json_string+=']},' #koniec barkodu
+        barcode_string=""
+        barcode_string+='{"barcode":"'+barcode+'","variants":[' #begin of barcode
+        variant_strings=[]
+        for strand in variants.children:
+            variant_string=check_variant(barcode_dict[barcode], threshold, strand)
+            if variant_string!="":
+                variant_strings.append(variant_string)
+        barcode_string+= ", ".join(variant_strings)
+        barcode_string+=']}' #end of barcode
+        barcode_strings.append(barcode_string)
+    json_string+=", ".join(barcode_strings)
     json_string+=']'                        
     print(json_string, file=json)      
 
 
-def guess2(barcode, threshold, strand): #podobne ako guess, len chceme vysledok v json formate
+def check_variant(barcode, threshold, strand): #check whether this variant meets our conditions
     pocet=0
     json_string = '{'
     json_string+='"name": "'+strand.name+'",'
     json_string+='"mutations":['
+    positions=[]
     for mut in strand.data:
-        #print(mut)
         if mut[2].isdigit():
             position = int(mut[1:len(mut)-1])-1
                         
-            #toto treba, inak vyhodi podmienku ze je mimo indexu :|        
+            #check that the position is within range        
             if position < 0 or position >= len(barcode):
                 continue
             
-            m1 = barcode[position][l2n[mut[0]]] #pocet baz zhodnych s referenciou
-            m2 = barcode[position][l2n[mut[len(mut)-1]]]; #pocet baz zhodnych s mutaciou
+            same_as_reference = barcode[position][l2n[mut[0]]] #num of bases same as reference
+            same_as_mutation = barcode[position][l2n[mut[len(mut)-1]]]; #num of bases same as mutation
             reads_coverage = barcode[position][0]+barcode[position][1]+barcode[position][2]+barcode[position][3]
                    
-            if m1 < m2 and reads_coverage >= threshold: #ak bolo na danu poziciu namapovanych uz aspon threshold baz a je viac tych zmutovanych                         
+            if same_as_reference < same_as_mutation and reads_coverage >= threshold:                     
                 pocet += 1
-                pos=position+1
-                json_string+='{"position":'+str(pos)+',"from":"'+mut[0]+'","to":"'+mut[len(mut)-1]+'"},'
-               
+                positions.append('{"position":'+str(position+1)+',"from":"'+mut[0]+'","to":"'+mut[len(mut)-1]+'"}')
+    json_string+=", ".join(positions)           
                 
     json_string+='],'
     json_string+='"subs":['      
-    #ak je pravdepodobna tato mutacie, zisti pre submutacie, ci sedia nejake
+    #we found a variant 
     if pocet >= strand.min_num:
+        #if the variant has subvariants, check them.
         if (len(strand.children) > 0):
-            for strandik in strand.children:
-                string_to_insert = guess2(barcode, threshold, strandik)
+            substrand_strings=[]
+            for substrand in strand.children:
+                string_to_insert = check_variant(barcode, threshold, substrand)
                 if (string_to_insert != ""):
-                    json_string+=string_to_insert
-                    
-        json_string+=']},'
-        return json_string
-    	
+                    substrand_strings.append(string_to_insert)
+            if len(substrand_strings)>0:
+                json_string+=", ".join(substrand_strings)        
+        json_string+=']}'
+        return json_string 
+    #if there is not enough mutations matched for this variant
     else:
     	return ""
             
@@ -194,12 +137,10 @@ def main():
     args = parse_args(sys.argv[1:])   
     reference = list(load_fasta(args.reference))[0][1]
     barcode_dict = load_file(args.file_path, reference)
-    mutacie = load_mutations(args.mutations)
+    variants = load_mutations(args.mutations)
     threshold = args.threshold
-    with  open(args.output+".csv", "w") as csv:
-    	find_variants(barcode_dict, mutacie, csv, threshold)
     with  open(args.output+".json", "w") as json:
-    	find_variants2(barcode_dict, mutacie, json, threshold)
+    	find_variants(barcode_dict, variants, json, threshold)
     
 
     

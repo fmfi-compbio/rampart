@@ -18,7 +18,6 @@ def load_dict(file_path, reference):
                 G = int(l[4])
                 T = int(l[5])
                 if not barcode in fdict:
-                    #print("found new barcode! "+barcode)
                     fdict[barcode] = [[0 for _ in letters] for _ in reference]
                 fdict[barcode][position][0]+=A
                 fdict[barcode][position][1]+=C
@@ -45,53 +44,6 @@ def load_fasta_fd(f):
     if len(buffer) > 0:
         yield label, "".join(buffer)
 
-"""
-def load_observed_counts(fd):
-    header = fd.readline().strip()
-    assert header == "position,letter,count", f"Expected 'position,letter,count' header, got '{header}' instead"
-    result_raw = defaultdict(dict)
-    for line in fd:
-        row = line.strip().split(",")
-        pos, letter, count = int(row[0])-1, row[1], int(row[2])
-        result_raw[pos][letter] = count
-    result = [[result_raw.get(pos, {}).get(letter, 0) for letter in "ACGT"]
-              for pos in range(1 + max(result_raw.keys(), default=-1))]
-    return result
-
-
-
-def load_clades(fd):
-    global l2n
-    header = fd.readline().strip()
-    assert header == "clade,position,letter,probability"
-    result = defaultdict(list)
-    for line in fd:
-        row = line.strip().split(",")
-        clade, position, letter_count, probability = row[0], int(row[1])-1, l2n[row[2]], float(row[3])
-        while position >= len(result[clade]):
-            result[clade].append([0 for _ in l2n])
-        result[clade][position][letter_count] = probability
-    clades = list(result.keys())
-
-    for clade in clades:
-        assert len(result[clade]) == len(result[clades[0]])
-
-    return dict(result)
-
-
-def entropy(p):
-    return -sum(x * math.log(x) if x > 0 else 0 for x in p)
-
-
-def cross_entropy(p, q):
-    assert len(p) == len(q)
-    return -sum(sorted(p[i] * math.log(max(1e-300, q[i])) for i in range(len(p))))
-
-
-def add_noise(v, eps=0.02):
-    res = [(1-eps) * x + eps/(len(v)-1) * (1 - x) for x in v]
-    return res
-"""
 
 def apply_to_cigartuples(fun, alignment, barcode, *args, **kwargs):
     """
@@ -123,17 +75,6 @@ def apply_to_cigartuples(fun, alignment, barcode, *args, **kwargs):
             raise Exception(f"Operation code of cigar tuple is outside of range [0-8]: "
                             f"op={op}, length={length}")
 
-
-def load_posteriors_for_reads(f):
-    header = f.readline().strip().split(",")
-    clade_names = header[1:]
-    probs = []
-    for line in f:
-        row = line.strip().split(",")
-        read_id = row[0]
-        probs.append((read_id, tuple(map(float, row[1:]))))
-    return clade_names, probs
-    
 def create_barcodes_dict(csv_filename):
    barcode_dict = {}
    with open(csv_filename, "r") as f:
@@ -145,12 +86,7 @@ def create_barcodes_dict(csv_filename):
             arr = line.split(",")
             barcode_dict[arr[0]] = arr[3]
    return barcode_dict
-                
-def print_alignments(alig):
-   for read in alig.fetch():
-       print(read)            
-   #for alignment_num, alignment in enumerate(alig.fetch()):
-       #print(alignment.query_name)
+                      
             
 def dump_dict_to_file(counts, f):        
     for barcode in counts:

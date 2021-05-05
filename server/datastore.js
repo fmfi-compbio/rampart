@@ -265,13 +265,11 @@ function getSampleVariants(){
         return variantData;
     } 
     let file_content =fs.readFileSync(fileToParse).toString();
-    let regex = /\,(?!\s*?[\{\[\"\'\w])/g;
-    file_content = file_content.replace(regex, '');
     vData = JSON.parse(file_content);
 
     for(const barcode of vData){
         const bc = (barcode.barcode=="none")? "unassigned" : barcode.barcode;
-        variantData[bc]=barcode.mutations;
+        variantData[bc]=barcode.variants;
     }
     return variantData; 
 }

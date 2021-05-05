@@ -8,24 +8,23 @@ class MutationsTree extends React.Component {
         this.state = {};
     }
 
-    createVariantString(variants, level){
-        let newText="";
+    createVariants(variants, level){
+        let variantLines=[];
         for(const variant of variants){
-            newText+='---'.repeat(level)+"variant: "+ variant.name+" (" + variant.mutations.map(mutation=>mutation.from+mutation.position+mutation.to).join(", ")+")\n";
+            variantLines.push('---'.repeat(level)+"variant: "+ variant.name+" (" + variant.mutations.map(mutation=>mutation.from+mutation.position+mutation.to).join(", ")+")");
             if(variant.subs.length>0){
-                newText+=this.createVariantString(variant.subs, level+1);
+                variantLines=variantLines.concat(this.createVariants(variant.subs, level+1));
             }
         }
-        return newText;
+        return variantLines;
     }
 
 
     componentDidMount() {
-        let newText=this.createVariantString(this.props.data, 0);
-        let newLinesToPtagText = newText.split('\n').map(i => {
+        let variantsTree = this.createVariants(this.props.data, 0).map(i => {
             return <p>{i}</p>
         });
-        this.setState({data:newLinesToPtagText});      
+        this.setState({data:variantsTree});      
     }
 
     componentDidUpdate(prevProps) {

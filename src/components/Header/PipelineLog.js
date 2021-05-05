@@ -50,8 +50,7 @@ const Pipeline = ({pipelineKey: key, data, socket}) => {
         <span>{status}</span>
 
 
-        {status === "running" ? null :
-          key === "barcode_strand_match" ? (
+        {(status !== "running" && key === "barcode_strand_match") ? (
             <span className="rightIcon">
             <PostProcessingNotPerSample 
               name = {data.get("name")}

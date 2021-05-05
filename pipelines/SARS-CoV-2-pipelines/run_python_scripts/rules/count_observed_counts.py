@@ -4,7 +4,7 @@ import os
 
 import pysam
 
-from helpers import load_fasta, apply_to_cigartuples, create_barcodes_dict, print_alignments, dump_dict_to_file, load_dict
+from helpers import load_fasta, apply_to_cigartuples, create_barcodes_dict, dump_dict_to_file, load_dict
 
 letters = "ACGT"
 l2n = {letter: num for num, letter in enumerate(letters)}
@@ -41,23 +41,8 @@ def write_files_to_be_ignored(working_path, to_work_with):
         for fname in to_work_with:
             print(fname, file=f)
 
-"""
-def dump_observed_counts(counts_by_pos, f):
-    print("position,letter,count", file=f)
-    for position, counts in enumerate(counts_by_pos):
-        for i, letter in enumerate("ACGT"):
-            print(f"{position+1},{letter},{counts[i]}", file=f)
-
-def dump_observed_counts_for_barcodes(counts_by_barcodes_and_pos, f):
-    for barcode in counts_by_barcodes_and_pos:
-        fname = barcode+".txt"
-        with open(fname, "w") as barcodefile:
-            dump_observed_counts(counts_by_barcodes_and_pos[barcode], barcodefile)
-"""            
-
 def count_bases_in_alignment(alignments, reference, alignment_length_low_cutoff, barcodes_dict, counts_by_barcode_and_pos):
     global l2n
-    #counts_by_pos = [[0 for _ in letters] for _ in reference]
     empty_queries_count = 0
     short_alignments_count = 0
 
@@ -68,7 +53,6 @@ def count_bases_in_alignment(alignments, reference, alignment_length_low_cutoff,
         if op == 0 or op == 7 or op == 8:
             for k in range(l):
                 try:
-                    #counts_by_pos[r + k][l2n[query[q + k]]] += 1
                     counts_by_barcode_and_pos[barcode][r + k][l2n[query[q + k]]]+=1
                 except IndexError as e:
                     print(e)
@@ -106,11 +90,9 @@ def count_observed_counts(alignment_filename,
                           counts,
                           reference): 
     alignments = pysam.AlignmentFile(alignment_filename, "rb")
-    #print_alignments(alignments)
     barcodes_dict = create_barcodes_dict(csv_filename)
     os.system("rm "+alignment_filename)
     os.system("rm "+alignment_filename+".bai")
-    #print(barcodes_dict)
 
     counts_by_barcode_and_pos = count_bases_in_alignment(alignments, reference, alignment_length_low_cutoff, barcodes_dict, counts)
 
