@@ -151,9 +151,13 @@ const SamplePanel = ({sampleName, sampleData, sampleVariant, config, reference, 
     mutationsTree: (
       <MutationsTree
        data={sampleVariant}
-       renderProp={ showSinglePanel === "mutationsTree" ?
-            (<ContractChart handleClick={() => goToChart(false)}/>) :
-            (<ExpandChart handleClick={() => goToChart("mutationsTree")}/>)
+       renderProp={ 
+            showSinglePanel === "mutationsTree" 
+            ?(
+              <ContractChart handleClick={() => goToChart(false)}/>
+            ) : (
+              <ExpandChart handleClick={() => goToChart("mutationsTree")}/>
+            )
         }
       />
     )
@@ -164,12 +168,14 @@ const SamplePanel = ({sampleName, sampleData, sampleVariant, config, reference, 
   const renderCharts = () => {
   
     if (!panelExpanded) return null;
-    var chartsToShow =[];
-    if(variant_name!==""){
-      chartsToShow = showSinglePanel ? charts[showSinglePanel] : [charts.coverage, charts.readLength, charts.coverageOverTime, charts.refSimilarity, charts.mutationsTree];
-    }
-    else{
-      chartsToShow = showSinglePanel ? charts[showSinglePanel] : [charts.coverage, charts.readLength, charts.coverageOverTime, charts.refSimilarity];
+    let chartsToShow;
+    if (showSinglePanel) {
+      chartsToShow = charts[showSinglePanel]
+    } else {
+      chartsToShow = [charts.coverage, charts.readLength, charts.coverageOverTime, charts.refSimilarity]
+      if (variant_name !== "") {
+        chartsToShow.push(charts.mutationsTree)
+      }
     }
     return (
     <ChartContainer>

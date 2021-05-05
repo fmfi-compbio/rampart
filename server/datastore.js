@@ -257,11 +257,6 @@ const whichReferencesToDisplay = (dataPerSample, threshold=5, maxNum=10) => {
     return refMatchesAcrossSamples;
 };
 
-function split_mutations(mstring){
-    let arr = mstring.split("&");
-    return arr;
-}
-
 function getSampleVariants(){
     let fileToParse = global.config.run.annotatedPath+"results/mutations.json";
     let variantData ={};
@@ -275,8 +270,7 @@ function getSampleVariants(){
     vData = JSON.parse(file_content);
 
     for(const barcode of vData){
-        var bc = barcode.barcode;
-        if(bc=="none"){bc="unassigned";}
+        const bc = (barcode.barcode=="none")? "unassigned" : barcode.barcode;
         variantData[bc]=barcode.mutations;
     }
     return variantData; 

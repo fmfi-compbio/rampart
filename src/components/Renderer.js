@@ -39,7 +39,6 @@ class Renderer extends React.Component {
         this.toggleTheme = () => {
             this.setState({lightMode: !this.state.lightMode});
         }
-
     }
     shouldComponentUpdate(nextProps, nextState) {
         if (this.state !== nextState) return true;

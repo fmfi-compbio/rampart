@@ -300,7 +300,8 @@ function getTimeNow() {
 function createJob({key, sampleName}) {
     let job = {};
     /* basic information */
-    if(sampleName){ //run-per-sample
+    /* only pipelines which are run per sample have sampleName set*/
+    if(sampleName){ 
         job.sample_name = sampleName;
         job.barcodes = global.datastore.getBarcodesForSampleName(sampleName);
         job.samples = `{${job.sample_name}: [${job.barcodes}]}`;

@@ -16,6 +16,7 @@ import React from 'react';
 import {makeTimeFormatter} from "../../utils/commonFunctions";
 
 const timeFormatter = makeTimeFormatter();
+
 const RunSummary = ({combinedData, timeSinceLastDataUpdate}) => {
   const readsMsg = combinedData ? `${combinedData.mappedCount} reads mapped | ${combinedData.processedCount} processed ` : "no data yet ";
   const rateMsg = combinedData && combinedData.processedRate >= 0 ?

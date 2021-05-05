@@ -59,8 +59,7 @@ const Pipeline = ({pipelineKey: key, data, socket}) => {
               socket = {socket}
             />
             </span>
-        ) : null 
-        }
+        ) : null }
 
 
         {status === "running" ? (
@@ -71,8 +70,7 @@ const Pipeline = ({pipelineKey: key, data, socket}) => {
           <span className="rightIcon">
             <IoIosAlert className="icon150" color="#F6EECA" />
           </span>
-        ) : null 
-        }
+        ) : null }
 
 
       </div>
