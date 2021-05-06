@@ -111,7 +111,7 @@ def check_variant(barcode, threshold, strand): #check whether this variant meets
                    
             if same_as_reference < same_as_mutation and reads_coverage >= threshold:                     
                 pocet += 1
-                positions.append('{"position":'+str(position+1)+',"from":"'+mut[0]+'","to":"'+mut[len(mut)-1]+'"}')
+                positions.append('{"position":'+str(position+1)+',"from":"'+mut[0]+'","to":"'+mut[len(mut)-1]+'"'+',"same_as_reference":'+str(same_as_reference)+',"same_as_mutation":'+str(same_as_mutation)+'}')
     json_string+=", ".join(positions)           
                 
     json_string+='],'
