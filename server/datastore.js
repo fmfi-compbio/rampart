@@ -259,17 +259,17 @@ const whichReferencesToDisplay = (dataPerSample, threshold=5, maxNum=10) => {
 
 function getSampleVariants(){
     let fileToParse = global.config.run.annotatedPath+"results/mutations.json";
-    let variantData ={};
+    let variantData = {};
     if (!fs.existsSync(fileToParse)) {
         //warn(`Could not find mutations file, ${fileToParse}, doesn't exist - skipping.`);
         return variantData;
     } 
-    let file_content =fs.readFileSync(fileToParse).toString();
+    let file_content = fs.readFileSync(fileToParse).toString();
     vData = JSON.parse(file_content);
 
     for(const barcode of vData){
-        const bc = (barcode.barcode=="none")? "unassigned" : barcode.barcode;
-        variantData[bc]=barcode.variants;
+        const bc = (barcode.barcode == "none") ? "unassigned" : barcode.barcode;
+        variantData[bc] = barcode.variants;
     }
     return variantData; 
 }

@@ -51,10 +51,7 @@ const InfoRow = ({sampleName, sampleData, sampleVariant, sampleColour, menuItems
         const timeFormatter = makeTimeFormatter();
         summaryText += `| read last seen ${timeFormatter(readLastSeen)} ago`;
       }
-      let variant_name = sampleVariant.map(variant => variant.name).join(" ");
-      if(variant_name===""){
-        variant_name="not known yet";
-      }
+      const variant_name = sampleVariant.length > 0 ? sampleVariant.map(variant => variant.name).join(" ") : "not known yet";
       summaryText += `| variant:  ${variant_name}`;
     }
 

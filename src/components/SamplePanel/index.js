@@ -75,10 +75,7 @@ const SamplePanel = ({sampleName, sampleData, sampleVariant, config, reference, 
   const sampleColours = {}; /* dataformat needed by <CoveragePlot> */
   sampleColours[sampleName] = sampleColour;
 
-  var variant_name="";
-    for(const variant of sampleVariant){
-      variant_name+=variant.name+" ";
-    }
+  const variant_name=sampleVariant.map(variant => variant.name).join(" "); 
 
   const panelExpandedHeight = (variant_name==="") ? "370px" : "740px"; 
 

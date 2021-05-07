@@ -1,13 +1,11 @@
 import argparse
 import sys
+import subprocess
 import os
 
 import pysam
 
-from helpers import load_fasta, apply_to_cigartuples, create_barcodes_dict, dump_dict_to_file, load_dict
-
-letters = "ACGT"
-l2n = {letter: num for num, letter in enumerate(letters)}
+from helpers import load_fasta, apply_to_cigartuples, create_barcodes_dict, dump_dict_to_file, load_dict, letters, l2n
 
 def parse_args(argv):
     parser = argparse.ArgumentParser()
@@ -20,7 +18,6 @@ def parse_args(argv):
     return parser.parse_args(argv)
 
 def create_bam(reference,fname,fastq_path,working_path):
-    print("minimap2 -t 2 -x map-ont -a "+reference+" "+fastq_path+"/"+fname+".fastq | samtools view -S -b -o - | samtools sort - -o "+working_path+"/"+fname+".bam && samtools index "+working_path+"/"+fname+".bam")
     res=os.system("minimap2 -t 2 -x map-ont -a "+reference+" "+fastq_path+"/"+fname+".fastq | samtools view -S -b -o - | samtools sort - -o "+working_path+"/"+fname+".bam && samtools index "+working_path+"/"+fname+".bam" )
     
 def scan_folder(working_path, dir_path):

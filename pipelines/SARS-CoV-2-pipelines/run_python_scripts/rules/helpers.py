@@ -93,7 +93,3 @@ def dump_dict_to_file(counts, f):
        for position, pos_counts in enumerate(counts[barcode]):
            print(f"{position+1},{barcode},{pos_counts[0]},{pos_counts[1]},{pos_counts[2]},{pos_counts[3]}", file=f)   
    
-   
-   
-   
-       

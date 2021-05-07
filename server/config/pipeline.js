@@ -72,7 +72,7 @@ function setUpPipelines(config, args, pathCascade) {
                     },
                     queue: true
                 });
-            } else if(key == "barcode_strand_match"){
+            } else if(key === "barcode_strand_match"){
                 checkPipeline(config, key, pipeline);
                 if (pipeline.ignore) return;
                 parseAnnotationRequires(pipeline, config, pathCascade, args) 
@@ -199,7 +199,7 @@ function checkPipeline(config, key, pipeline, giveWarning = false) {
     }
 
     /* deprecation warnings */
-    if (pipeline.requires && key !== "annotation" && key!=="barcode_strand_match") {
+    if (pipeline.requires && key !== "annotation" && key !== "barcode_strand_match") {
         warn(`The 'requires' property (pipeline "${key}") is not yet supported.`);
         delete pipeline.requires;
     }

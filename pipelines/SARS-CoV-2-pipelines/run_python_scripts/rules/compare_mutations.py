@@ -1,10 +1,9 @@
 import os
 import sys
 import argparse
+import json
 
-from helpers import load_fasta, l2n
-
-letters = "ACGT"
+from helpers import load_fasta, l2n, letters
 
 class Tree:
     def __init__(self, name, min_num):
@@ -72,31 +71,26 @@ def load_mutations(mutations_path):    #loading .txt file containing mutations f
 
     return mutations
 
-def find_variants(barcode_dict, variants, json, threshold): #looking for possible variants for a barcode
-    barcode_strings=[]
-    json_string='['
+def find_variants(barcode_dict, variants, jsonfile, threshold): #looking for possible variants for a barcode
+
+    barcodes=[]
     for barcode in barcode_dict:
-        barcode_string=""
-        barcode_string+='{"barcode":"'+barcode+'","variants":[' #begin of barcode
-        variant_strings=[]
+        barcode_to_append = {}
+        barcode_to_append['barcode'] = barcode
+        barcode_to_append['variants'] = []
         for strand in variants.children:
-            variant_string=check_variant(barcode_dict[barcode], threshold, strand)
-            if variant_string!="":
-                variant_strings.append(variant_string)
-        barcode_string+= ", ".join(variant_strings)
-        barcode_string+=']}' #end of barcode
-        barcode_strings.append(barcode_string)
-    json_string+=", ".join(barcode_strings)
-    json_string+=']'                        
-    print(json_string, file=json)      
+            variant=check_variant(barcode_dict[barcode], threshold, strand)
+            if variant != None:
+                barcode_to_append['variants'].append(variant)
+        barcodes.append(barcode_to_append)
+    print(json.dumps(barcodes), file=jsonfile)  
 
 
 def check_variant(barcode, threshold, strand): #check whether this variant meets our conditions
-    pocet=0
-    json_string = '{'
-    json_string+='"name": "'+strand.name+'",'
-    json_string+='"mutations":['
-    positions=[]
+    num_of_mutations = 0
+    variant_dict = {}
+    variant_dict['name'] = strand.name
+    variant_dict['mutations'] = []
     for mut in strand.data:
         if mut[2].isdigit():
             position = int(mut[1:len(mut)-1])-1
@@ -110,28 +104,29 @@ def check_variant(barcode, threshold, strand): #check whether this variant meets
             reads_coverage = barcode[position][0]+barcode[position][1]+barcode[position][2]+barcode[position][3]
                    
             if same_as_reference < same_as_mutation and reads_coverage >= threshold:                     
-                pocet += 1
-                positions.append('{"position":'+str(position+1)+',"from":"'+mut[0]+'","to":"'+mut[len(mut)-1]+'"'+',"same_as_reference":'+str(same_as_reference)+',"same_as_mutation":'+str(same_as_mutation)+'}')
-    json_string+=", ".join(positions)           
-                
-    json_string+='],'
-    json_string+='"subs":['      
+                num_of_mutations += 1
+                mutation_dict = {}
+                mutation_dict['position'] = position+1
+                mutation_dict['from'] = mut[0]
+                mutation_dict['to'] = mut[len(mut)-1]
+                mutation_dict['same_as_reference'] = same_as_reference
+                mutation_dict['same_as_mutation'] = same_as_mutation
+                variant_dict['mutations'].append(mutation_dict)
+               
+   
+    variant_dict['subs'] = []
     #we found a variant 
-    if pocet >= strand.min_num:
+    if num_of_mutations >= strand.min_num:
         #if the variant has subvariants, check them.
         if (len(strand.children) > 0):
-            substrand_strings=[]
             for substrand in strand.children:
-                string_to_insert = check_variant(barcode, threshold, substrand)
-                if (string_to_insert != ""):
-                    substrand_strings.append(string_to_insert)
-            if len(substrand_strings)>0:
-                json_string+=", ".join(substrand_strings)        
-        json_string+=']}'
-        return json_string 
+                substrand_dict = check_variant(barcode, threshold, substrand)
+                if (substrand_dict != None):
+                    variant_dict['subs'].append(substrand_dict)
+        return variant_dict 
     #if there is not enough mutations matched for this variant
     else:
-    	return ""
+    	return None
             
 def main():
     args = parse_args(sys.argv[1:])   
@@ -139,8 +134,8 @@ def main():
     barcode_dict = load_file(args.file_path, reference)
     variants = load_mutations(args.mutations)
     threshold = args.threshold
-    with  open(args.output+".json", "w") as json:
-    	find_variants(barcode_dict, variants, json, threshold)
+    with  open(args.output+".json", "w") as jsonfile:
+    	find_variants(barcode_dict, variants, jsonfile, threshold)
     
 
     

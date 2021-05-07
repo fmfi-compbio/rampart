@@ -9,14 +9,10 @@ class MutationsTree extends React.Component {
     }
 
     createVariants(variants, level){
-        let variantLines=[];
-        for(const variant of variants){
-            variantLines.push('---'.repeat(level)+"variant: "+ variant.name+" (" + variant.mutations.map(mutation=>mutation.from+mutation.position+mutation.to).join(", ")+")");
-            if(variant.subs.length>0){
-                variantLines=variantLines.concat(this.createVariants(variant.subs, level+1));
-            }
-        }
-        return variantLines;
+        return variants.flatMap((variant) => [
+            `${'---'.repeat(level)}variant: ${variant.name} (${variant.mutations.map(mutation=>mutation.from+mutation.position+mutation.to).join(", ")})`,
+            ...this.createVariants(variant.subs, level+1)
+         ])
     }
 
 
