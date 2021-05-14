@@ -8,33 +8,22 @@ class MutationsTree extends React.Component {
         this.state = {};
     }
 
-    createVariants(variants, level){
-        return variants.flatMap((variant) => [
+    createVariants = (variants, level) => {
+        return (variants.flatMap((variant) => [
             `${'---'.repeat(level)}variant: ${variant.name} (${variant.mutations.map(mutation=>mutation.from+mutation.position+mutation.to).join(", ")})`,
             ...this.createVariants(variant.subs, level+1)
-         ])
-    }
-
-
-    componentDidMount() {
-        let variantsTree = this.createVariants(this.props.data, 0).map(i => {
+         ])).map(i => {
             return <p>{i}</p>
         });
-        this.setState({data:variantsTree});      
     }
-
-    componentDidUpdate(prevProps) {
-        this.render();
-    }
-
-
+    
     render() {
         return (
             <Container width="90%" ref="">
                 <Title>
                     {"Mutations tree"}
                 </Title>
-                {this.state.data}
+                {this.createVariants(this.props.data, 0)}
                 {this.props.renderProp ? this.props.renderProp : null}
             </Container>
         )
