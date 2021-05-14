@@ -301,7 +301,7 @@ function createJob({key, sampleName}) {
     let job = {};
     /* basic information */
     /* only pipelines which are run per sample have sampleName set*/
-    if(sampleName){ 
+    if (sampleName) { 
         job.sample_name = sampleName;
         job.barcodes = global.datastore.getBarcodesForSampleName(sampleName);
         job.samples = `{${job.sample_name}: [${job.barcodes}]}`;

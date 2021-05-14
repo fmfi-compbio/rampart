@@ -78,11 +78,8 @@ def apply_to_cigartuples(fun, alignment, barcode, *args, **kwargs):
 def create_barcodes_dict(csv_filename):
    barcode_dict = {}
    with open(csv_filename, "r") as f:
-        line = f.readline()
-        while True:
-            line = f.readline()
-            if not line:
-                break
+        next(f)
+        for line in f:
             arr = line.split(",")
             barcode_dict[arr[0]] = arr[3]
    return barcode_dict

@@ -58,8 +58,8 @@ export const PostProcessingNotPerSample = ({name, pipelinekey, socket}) => {
 
     return (
         <SmallerModernButton onClick={send}>
-                    <IoMdPlay/>
-                    TRIGGER
+            <IoMdPlay/>
+            TRIGGER
         </SmallerModernButton>
     )
 

@@ -9,13 +9,15 @@ class MutationsTree extends React.Component {
     }
 
     createVariants = (variants, level) => {
-        return (variants.flatMap((variant) => [
+        return variants.flatMap((variant) => [
             `${'---'.repeat(level)}variant: ${variant.name} (${variant.mutations.map(mutation=>mutation.from+mutation.position+mutation.to).join(", ")})`,
             ...this.createVariants(variant.subs, level+1)
-         ])).map(i => {
-            return <p>{i}</p>
-        });
+         ]);
     }
+
+    createVariantWithpTags = (variants) => {
+        return this.createVariants(variants, 0).map(i => <p>{i}</p>);
+    } 
     
     render() {
         return (
@@ -23,7 +25,7 @@ class MutationsTree extends React.Component {
                 <Title>
                     {"Mutations tree"}
                 </Title>
-                {this.createVariants(this.props.data, 0)}
+                {this.createVariantWithpTags(this.props.data)}
                 {this.props.renderProp ? this.props.renderProp : null}
             </Container>
         )

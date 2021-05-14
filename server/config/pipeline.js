@@ -72,7 +72,7 @@ function setUpPipelines(config, args, pathCascade) {
                     },
                     queue: true
                 });
-            } else if(key === "barcode_strand_match"){
+            } else if (key === "barcode_strand_match") {
                 checkPipeline(config, key, pipeline);
                 if (pipeline.ignore) return;
                 parseAnnotationRequires(pipeline, config, pathCascade, args) 

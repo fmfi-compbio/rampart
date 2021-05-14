@@ -26,7 +26,7 @@ async function getCSVs(dir) {
     return dirent.isDirectory() ? null : res; //dont look for csv files recursively - look only for the files that RAMPART created in annotations pipeline
   }));
   return Array.prototype.concat(...files)
-    .filter((f) => (f!=null && f.endsWith('.csv')));
+    .filter((f) => (f != null && f.endsWith('.csv')));
 }
 
 
