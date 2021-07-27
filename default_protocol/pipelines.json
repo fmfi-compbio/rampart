@@ -1,7 +1,7 @@
 {
 	"annotation": {
 		"name": "Annotate reads",
-		"path": "pipelines/demux_map",
+		"path": "../pipelines/default_pipeline/demux_map",
 		"config_file": "config.yaml",
 		"requires": [
 			{
@@ -12,7 +12,7 @@
 	},
 	"export_reads": {
 		"name": "Export reads",
-		"path": "pipelines/bin_to_fastq",
+		"path": "../pipelines/default_pipeline/bin_to_fastq",
 		"config_file": "config.yaml",
 		"run_per_sample": true
 	}

@@ -107,7 +107,7 @@ function getInitialConfig(args) {
         log(`Simulating real-time appearance of reads every ${config.run.simulateRealTime} seconds`);
     }
 
-    return {config, pipelineRunners};
+    return {config, pathCascade};
 };
 
 
@@ -169,8 +169,8 @@ function modifyConfigViaCommandLineArguments(config, args) {
         config.run.basecalledPath = args.basecalledPath;
     }
 
-    if (args.annotatedDir) {
-        config.run.annotatedPath = args.annotatedDir;
+    if (args.annotatedPath) {
+        config.run.annotatedPath = args.annotatedPath;
     }
 
     if (args.clearAnnotated) {

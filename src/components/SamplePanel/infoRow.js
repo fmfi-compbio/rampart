@@ -37,7 +37,7 @@ const TriggerPanelExpand = ({sampleColour, isExpanded, handleClick}) => {
  * InfoRow -- the thin line of text / icons at the top of a sample panel
  * the info row is rendered when the panel is collapsed and when open
  */
-const InfoRow = ({sampleName, sampleData, sampleColour, menuItems, handleClick, isExpanded, timeSinceLastDataUpdate}) => {
+const InfoRow = ({sampleName, sampleData, sampleVariant, sampleColour, menuItems, handleClick, isExpanded, timeSinceLastDataUpdate}) => {
     const summaryTitle = `${sampleName}`;
 
     let summaryText;
@@ -49,8 +49,10 @@ const InfoRow = ({sampleName, sampleData, sampleColour, menuItems, handleClick, 
       const readLastSeen = sampleData.readsLastSeen+timeSinceLastDataUpdate;
       if (readLastSeen > 5) {
         const timeFormatter = makeTimeFormatter();
-        summaryText += `| read last seen ${timeFormatter(readLastSeen)} ago`
+        summaryText += `| read last seen ${timeFormatter(readLastSeen)} ago`;
       }
+      const variant_name = sampleVariant.length > 0 ? sampleVariant.map(variant => variant.name).join(" ") : "not known yet";
+      summaryText += `| variant:  ${variant_name}`;
     }
 
     return (

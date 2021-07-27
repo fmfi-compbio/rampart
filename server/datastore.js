@@ -18,8 +18,11 @@ const { timerStart, timerEnd } = require('./timers');
 const { updateWhichReferencesAreDisplayed, updateReferencesSeen } = require("./config/modify");
 const { getBarcodesInConfig } = require("./config/helpers");
 const { UNMAPPED_LABEL } = require("./magics");
-const { verbose, fatal } = require("./utils");
+const { verbose, fatal, warn } = require("./utils");
 const { newSampleColour } = require("./colours");
+const fs = require('fs');
+const dsv = require('d3-dsv');
+const { array } = require("prop-types");
 
 /**
  * The main store of all annotated data.
@@ -254,6 +257,23 @@ const whichReferencesToDisplay = (dataPerSample, threshold=5, maxNum=10) => {
     return refMatchesAcrossSamples;
 };
 
+function getSampleVariants(){
+    const fileToParse = global.config.run.annotatedPath+"results/mutations.json";
+    const variantData = {};
+    if (!fs.existsSync(fileToParse)) {
+        //warn(`Could not find mutations file, ${fileToParse}, doesn't exist - skipping.`);
+        return variantData;
+    } 
+    const file_content = fs.readFileSync(fileToParse).toString();
+    vData = JSON.parse(file_content);
+
+    for (const barcode of vData) {
+        const bc = (barcode.barcode == "none") ? "unassigned" : barcode.barcode;
+        variantData[bc] = barcode.variants;
+    }
+    return variantData; 
+}
+
 /**
  * Creates a summary of all data to deliver to the client.
  * @returns {{
@@ -284,6 +304,8 @@ Datastore.prototype.getDataForClient = function() {
         this.filteredDataPerSample :
         this.dataPerSample;
 
+    const variantData = getSampleVariants();
+
     /* Part I - summarise each sample (i.e. each sample name, i.e. this.dataPerSample */
     const summarisedData = {};
     const refMatchesAcrossSamples = whichReferencesToDisplay(dataToVisualise, global.config.display.referenceMapCountThreshold, global.config.display.maxReferencePanelSize);
@@ -302,6 +324,11 @@ Datastore.prototype.getDataForClient = function() {
             /* Following removed as the client no longer uses it - Mar 30 2020 */
             // refMatchSimilarities: sampleData.refMatchSimilarities
         }
+
+        if (!(sampleName in variantData)) {
+            variantData[sampleName] = []
+        }
+
     }
 
     /* Part II - summarise the overall data, i.e. all samples combined */
@@ -309,8 +336,10 @@ Datastore.prototype.getDataForClient = function() {
         processedCount: Object.values((dataToVisualise)).map((d) => d.processedCount).reduce((pv, cv) => pv+cv, 0),
         mappedCount: Object.values((dataToVisualise)).map((d) => d.mappedCount).reduce((pv, cv) => pv+cv, 0),
         readsLastSeen: Math.min(...Object.values(summarisedData).map((d) => d.readsLastSeen)),
-        temporal: summariseOverallTemporalData(summarisedData)
+        temporal: summariseOverallTemporalData(summarisedData),
+        filesSeen: global.filesSeen.size
     };
+ 
     combinedData.mappedRate = (combinedData.temporal.length > 0 ? combinedData.temporal[combinedData.temporal.length - 1].mappedRate : -1);
 
     timerEnd("getDataForClient");
@@ -318,7 +347,7 @@ Datastore.prototype.getDataForClient = function() {
     if (!Object.keys(this.dataPerSample).length) {
         return false;
     }
-    return {dataPerSample: summarisedData, combinedData};
+    return {dataPerSample: summarisedData, combinedData, variantData};
 };
 
 

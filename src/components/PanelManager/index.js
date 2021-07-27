@@ -18,7 +18,7 @@ import SamplePanel from "../SamplePanel"
 import OverallSummaryPanel from "../OverallSummaryPanel";
 import { isEqual } from "lodash";
 
-const PanelManager = ({dataPerSample, combinedData, config, openConfigSidebar, socket}) => {
+const PanelManager = ({dataPerSample, variantPerSample, combinedData, config, openConfigSidebar, socket}) => {
     
     /* -----------    STATE MANAGEMENT    ------------------- */
     const [samplePanelsExpanded, setSamplePanelsExpanded] = useState({});
@@ -63,6 +63,8 @@ const PanelManager = ({dataPerSample, combinedData, config, openConfigSidebar, s
         );
     }
 
+    let sorted_keys = Object.keys(dataPerSample).sort();
+
     /* ----------------- R E N D E R ---------------- */
     return (
         <>
@@ -73,11 +75,12 @@ const PanelManager = ({dataPerSample, combinedData, config, openConfigSidebar, s
                 config={config}
                 goToSamplePanel={goToSamplePanel}
             />
-            {Object.keys(dataPerSample).map((name) => (
+            {sorted_keys.map((name) => (
                 <div key={name} ref={refs.current.get(name)}>
                     <SamplePanel
                         sampleName={name}
                         sampleData={dataPerSample[name]}
+                        sampleVariant={variantPerSample[name]}
                         panelExpanded={samplePanelsExpanded[name]}
                         setPanelExpanded={setPanelExpanded}
                         reference={config.reference}

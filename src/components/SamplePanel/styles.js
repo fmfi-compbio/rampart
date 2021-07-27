@@ -11,8 +11,8 @@ const SamplePanelContainer = styled.div`
     border-radius: 5px;
     border-left: 5px solid ${(props) => props.sampleColour};
     overflow: hidden;
-    height: ${(props) => props.panelExpanded ? "370px" : "30px"};
-    min-height: ${(props) => props.panelExpanded ? "370px" : "30px"};
+    height: ${(props) => props.panelExpanded ? props.panelExpandedHeight : "30px"}; 
+    min-height: ${(props) => props.panelExpanded ? props.panelExpandedHeight : "30px"};
 
     > .infoRow {
         display: flex;

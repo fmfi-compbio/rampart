@@ -42,3 +42,6 @@ binned*
 
 # snakemake stuff
 .snakemake/
+
+# python stuff
+__pycache__/

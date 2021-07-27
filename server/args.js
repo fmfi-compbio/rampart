@@ -35,6 +35,11 @@ config.addArgument('--referencesLabel', {help: "the reference header field to us
 config.addArgument('--barcodeNames', {nargs: '+', help: "specify mapping of barcodes to sample names - e.g. 'BC01=Sample1' (can have more than one barcode mapping to the same name)"});
 config.addArgument('--annotationOptions', {nargs: '+', help: "pass through config options to the annotation script (key=value pairs)"});
 
+
+/* variants, comming soon (configurable in covid_protocol/pipelines/run_python_scripts/config.yaml for now) */
+//config.addArgument('--coverageThreshold', {help: "minimal coverage needed for a mutation to be classified as significant support for variant"});
+//config.addArgument('--mutationsFilePath', {help: "path to a .txt file with mutations defined for a variant of a virus"});
+
 const runtime = parser.addArgumentGroup({title: 'Runtime commands', description: "Options to specify how RAMPART behaves"});
 runtime.addArgument('--clearAnnotated', {action: "storeTrue", help: "remove any annotation files present when RAMPART starts up (force re-annotation of all FASTQs)"});
 runtime.addArgument('--simulateRealTime', {type: 'int', defaultValue: 0, help: "simulate real-time annotation with given delay between files (default none)"});

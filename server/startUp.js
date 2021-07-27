@@ -23,10 +23,10 @@ async function getCSVs(dir) {
   const dirents = await readdir(dir, { withFileTypes: true });
   const files = await Promise.all(dirents.map((dirent) => {
     const res = path.resolve(dir, dirent.name);
-    return dirent.isDirectory() ? getCSVs(res) : res;
+    return dirent.isDirectory() ? null : res; //dont look for csv files recursively - look only for the files that RAMPART created in annotations pipeline
   }));
   return Array.prototype.concat(...files)
-    .filter((f) => f.endsWith('.csv'));
+    .filter((f) => (f != null && f.endsWith('.csv')));
 }
 
 

@@ -63,14 +63,25 @@ function setUpPipelines(config, args, pathCascade) {
                     }
                     pipeline.configOptions.limit_barcodes_to = [...getBarcodesInConfig(config)].join(',');
                     verbose("config", `Limiting barcodes to: ${pipeline.configOptions.limit_barcodes_to}`)
-                }
-                
+                } 
                 // set up the runner
                 pipelineRunners[key] = new PipelineRunner({
                     config: pipeline,
                     onSuccess: (job) => {
                         addToParsingQueue(path.join(job.output_path, job.filename_stem + '.csv'));
                     },
+                    queue: true
+                });
+            } else if (key === "barcode_strand_match") {
+                checkPipeline(config, key, pipeline);
+                if (pipeline.ignore) return;
+                parseAnnotationRequires(pipeline, config, pathCascade, args) 
+                pipeline.configOptions = mergeAdditionalAnnotationOptions(pipeline.configOptions, config, args);
+                
+                // set up the runner
+                pipelineRunners[key] = new PipelineRunner({
+                    config: pipeline,
+                    onSuccess: () => {global.NOTIFY_CLIENT_DATA_UPDATED();},
                     queue: true
                 });
             } else {
@@ -188,7 +199,7 @@ function checkPipeline(config, key, pipeline, giveWarning = false) {
     }
 
     /* deprecation warnings */
-    if (pipeline.requires && key !== "annotation") {
+    if (pipeline.requires && key !== "annotation" && key !== "barcode_strand_match") {
         warn(`The 'requires' property (pipeline "${key}") is not yet supported.`);
         delete pipeline.requires;
     }
