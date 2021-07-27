@@ -17,8 +17,12 @@ def parse_args(argv):
     parser.add_argument("--rampart_csv_path", type=str, required=True)
     return parser.parse_args(argv)
 
-def create_bam(reference,fname,fastq_path,working_path):
-    res=os.system("minimap2 -t 2 -x map-ont -a "+reference+" "+fastq_path+"/"+fname+".fastq | samtools view -S -b -o - | samtools sort - -o "+working_path+"/"+fname+".bam && samtools index "+working_path+"/"+fname+".bam" )
+def create_bam(reference,subfolder,fname,fastq_path,working_path):
+    if os.path.exists(fastq_path+subfolder+"/"+fname+".fastq"):
+        gziped=""
+    elif os.path.exists(fastq_path+subfolder+"/"+fname+".fastq.gz"): # deal with gziped fastq files
+        gziped=".gz"
+    os.system("minimap2 -t 2 -x map-ont -a "+reference+" "+fastq_path+subfolder+"/"+fname+".fastq"+gziped+" | samtools view -S -b -o - | samtools sort - -o "+working_path+"/"+fname+".bam && samtools index "+working_path+"/"+fname+".bam")   
     
 def scan_folder(working_path, dir_path):
     to_ignore = set()
@@ -40,7 +44,8 @@ def scan_folder(working_path, dir_path):
 def write_files_to_be_ignored(working_path, to_work_with):
     with open(working_path+"/done.txt", "a+") as f:
         for fname in to_work_with:
-            print(fname, file=f)
+            if fname.endswith(".csv"):
+                print(fname, file=f)
 
 def count_bases_in_alignment(alignments, reference, alignment_length_low_cutoff, barcodes_dict, counts_by_barcode_and_pos):
     global l2n
@@ -113,7 +118,7 @@ def main():
         if os.path.isfile(args.rampart_csv_path+"/"+fname):
             print(fname)
             fname=fname.rsplit('.', 1)[0]
-            create_bam(args.reference,fname,args.fastq_path,args.working_path)
+            create_bam(args.reference,"",fname,args.fastq_path,args.working_path)
             counts_by_barcode_and_pos = count_observed_counts(alignment_filename=args.working_path+"/"+fname+".bam",
                                        csv_filename=args.rampart_csv_path+"/"+fname+".csv",
                                        alignment_length_low_cutoff=args.alignment_low_cutoff,
@@ -124,12 +129,13 @@ def main():
             for subfname in file_subset:
             	print(fname+"/"+subfname)
             	subfname=subfname.split('.',1)[0]
-            	create_bam(args.reference,subfname,args.fastq_path,args.working_path)
+            	create_bam(args.reference,"/"+fname, subfname,args.fastq_path,args.working_path)
             	counts_by_barcode_and_pos = count_observed_counts(alignment_filename=args.working_path+"/"+subfname+".bam",
                                        csv_filename=args.rampart_csv_path+"/"+fname+"/"+subfname+".csv",
                                        alignment_length_low_cutoff=args.alignment_low_cutoff,
                                        counts=counts_by_barcode_and_pos,
                                        reference=reference)
+            write_files_to_be_ignored(args.working_path, file_subset)
             	
     curpath = os.path.abspath(os.curdir)
     print("Current path is: %s" % (curpath))
