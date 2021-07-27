@@ -23,6 +23,7 @@ def create_bam(reference,fname,fastq_path,working_path):
 def scan_folder(working_path, dir_path):
     to_ignore = set()
     to_work_with = set()
+    ignore_folders=["base_count", "log", "results", "temp"]
     if os.path.exists(working_path+"/done.txt"):
         with open(working_path+"/done.txt", "r") as f:
             for line in f:
@@ -31,6 +32,9 @@ def scan_folder(working_path, dir_path):
         if filename.endswith(".csv"): 
             if not(filename in to_ignore):
                 to_work_with.add(filename)
+        if os.path.isdir(dir_path+"/"+filename) and not filename in ignore_folders:
+            to_work_with.add(filename)
+    print(to_work_with)
     return to_work_with
     
 def write_files_to_be_ignored(working_path, to_work_with):
@@ -103,14 +107,30 @@ def main():
     if len(counts_by_barcode_and_pos)==0:
     	counts_by_barcode_and_pos["none"] = [[0 for _ in letters] for _ in reference]
     for fname in file_set:
-        print(fname)
-        fname=fname.rsplit('.', 1)[0]
-        create_bam(args.reference,fname,args.fastq_path,args.working_path)
-        counts_by_barcode_and_pos = count_observed_counts(alignment_filename=args.working_path+"/"+fname+".bam",
-                              csv_filename=args.rampart_csv_path+"/"+fname+".csv",
-                              alignment_length_low_cutoff=args.alignment_low_cutoff,
-                              counts=counts_by_barcode_and_pos,
-                              reference=reference)
+        print(args.rampart_csv_path+"/"+fname)
+        print("is file? "+str(os.path.isfile(args.rampart_csv_path+"/"+fname)))
+        print("id dir? "+str(os.path.isdir(args.rampart_csv_path+"/"+fname)))
+        if os.path.isfile(args.rampart_csv_path+"/"+fname):
+            print(fname)
+            fname=fname.rsplit('.', 1)[0]
+            create_bam(args.reference,fname,args.fastq_path,args.working_path)
+            counts_by_barcode_and_pos = count_observed_counts(alignment_filename=args.working_path+"/"+fname+".bam",
+                                       csv_filename=args.rampart_csv_path+"/"+fname+".csv",
+                                       alignment_length_low_cutoff=args.alignment_low_cutoff,
+                                       counts=counts_by_barcode_and_pos,
+                                       reference=reference)
+        elif os.path.isdir(args.rampart_csv_path+"/"+fname):
+            file_subset=scan_folder(args.working_path, args.rampart_csv_path+"/"+fname)
+            for subfname in file_subset:
+            	print(fname+"/"+subfname)
+            	subfname=subfname.split('.',1)[0]
+            	create_bam(args.reference,subfname,args.fastq_path,args.working_path)
+            	counts_by_barcode_and_pos = count_observed_counts(alignment_filename=args.working_path+"/"+subfname+".bam",
+                                       csv_filename=args.rampart_csv_path+"/"+fname+"/"+subfname+".csv",
+                                       alignment_length_low_cutoff=args.alignment_low_cutoff,
+                                       counts=counts_by_barcode_and_pos,
+                                       reference=reference)
+            	
     curpath = os.path.abspath(os.curdir)
     print("Current path is: %s" % (curpath))
     print("Writing output to: %s" % (os.path.join(curpath, args.output)))    
