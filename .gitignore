@@ -45,3 +45,7 @@ binned*
 
 # python stuff
 __pycache__/
+
+#covid exmaple data
+example_data/SARS-CoV-2/fastq/pass
+

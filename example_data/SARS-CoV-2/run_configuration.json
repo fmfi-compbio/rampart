@@ -1,0 +1,9 @@
+{
+  "title": "SARS-CoV-2 Sequencing Run",
+  "basecalledPath": "fastq/pass",
+   "annotationOptions": {
+        "require_two_barcodes": "true",
+        "barcode_threshold": 50,
+        "barcode_set": "all"
+   }
+}

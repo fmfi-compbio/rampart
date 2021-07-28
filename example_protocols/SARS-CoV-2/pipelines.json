@@ -1,0 +1,13 @@
+{
+	"barcode_strand_match":{
+		"name": "Match strands to barcodes",
+		"path": "../../pipelines/SARS-CoV-2-pipelines/variant_calling",
+		"config_file": "config.yaml",
+		"requires":[
+			{
+				"file": "references.fasta",
+				"config_key": "references_file"
+			}
+		]
+	}
+}
