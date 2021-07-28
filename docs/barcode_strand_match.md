@@ -19,8 +19,8 @@ When you trigger the pipeline next time, the pipeline will use this output file 
 
 The next step of our pipeline is determining the variants based on the provided `.txt` file of a specific format (see mutations file section below) which contains the changes in reference genome that are specific for some known variants of sars-cov-2.
 
-By default our pipeline uses one of the `.txt` files we have created. All the `.txt` files are located in /covid_protocol/pipelines/run_python_scripts/rules/mut_files/
-You may also want to provide your own. To do this, you have to create a `.txt` file in the directory mentioned above, and then in `covid_protocol/pipelines/run_python_scripts/config.yaml` replace the name of the file to be used with your own. 
+By default our pipeline uses one of the `.txt` files we have created. All the `.txt` files are located in pipelines/SARS-CoV-2-pipelines/variant_calling/rules/mut_files/
+You may also want to provide your own. To do this, you have to create a `.txt` file in the directory mentioned above, and then in `pipelines/SARS-CoV-2-pipelines/variant_calling/config.yaml` replace the name of the file to be used with your own. 
 
 You can also set your own threshold value, which determines minimal number of reads mapped to the position in the reference genome, so that our python script will clasify a mutation as significat enough to support that the barcode sample corresponds to a variant.
 

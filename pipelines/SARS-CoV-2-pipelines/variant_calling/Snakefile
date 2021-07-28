@@ -13,7 +13,14 @@ config["fastq_path"]=config["basecalled_path"].rstrip("/")
 rule all:
     input:
         path = config["path"],
-        mutations_csv = config["path"]+"/results/mutations.json"
+        mutations_csv = config["path"]+"/results/mutations.json",
+        tmp = config["path"]+"/results/run" #tmp file to force run of this rule every time pipeline is triggered
+    params:
+        tmp_file = config["path"]+"/results/run"
+    shell: #remove the tmp file
+        """
+        rm {params.tmp_file}
+        """
 
 ##### Modules #####
 include: "rules/count_and_compare.smk"
