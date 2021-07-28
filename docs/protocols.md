@@ -45,26 +45,15 @@ Each pipeline defined in the JSON must indicate a directory containing a `Snakem
 
 You might also want to use our `barcode_strand_match` pipeline, so that you will be able to use the core modification we added to the original RAMPART version
 
-You can find more about the `barcode_strand_match` pipeline [here](barcode_strand_match)
+You can find more about the `barcode_strand_match` pipeline [here](barcode_strand_match.md)
 
-Our pipelines are specified as follows:
+Our pipeline is specified as follows:
 
 ```json
 {
-    "annotation": {
-		"name": "Annotate reads",
-		"path": "pipelines/demux_map_covid",
-		"config_file": "config.yaml",
-		"requires": [
-			{
-				"file": "references.fasta",
-				"config_key": "references_file"
-			}
-		]
-	},
 	"barcode_strand_match":{
 		"name": "Match strands to barcodes",
-		"path": "pipelines/run_python_scripts",
+		"path": "path/to/rampart/pipelines/SARS-CoV-2-pipelines/variant_calling",
 		"config_file": "config.yaml",
 		"requires":[
 			{
@@ -72,12 +61,6 @@ Our pipelines are specified as follows:
 				"config_key": "references_file"
 			}
 		]
-	},
-	"export_reads": {
-		"name": "Export reads",
-		"path": "pipelines/bin_to_fastq",
-		"config_file": "config.yaml",
-		"run_per_sample": true
 	}
 }
 ```
