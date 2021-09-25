@@ -29,4 +29,3 @@ rule count_and_compare:
         python3 {params.path_to_script}/compare_mutations.py {params.count_file:q} {input.ref:q} {input.mut:q} --threshold {params.threshold:q} -o {params.output} > {params.log_dir}/compare_mutations.log 2> {params.log_dir}/compare_mutations.err
         """
          
-#touch {params.out_dir}/run #not needed
