@@ -12,15 +12,13 @@ config["fastq_path"]=config["basecalled_path"].rstrip("/")
 
 rule all:
     input:
-        path = config["path"],
+        path = config["path"], #if there is something new to be processed in the rampart output path, we want to execute this rule
         mutations_csv = config["path"]+"/results/mutations.json",
-        tmp = config["path"]+"/results/run" #tmp file to force run of this rule every time pipeline is triggered
-    params:
-        tmp_file = config["path"]+"/results/run"
-    shell: #remove the tmp file
-        """
-        rm {params.tmp_file}
-        """
+       # tmp = config["path"]+"/results/run" #tmp file to force re-run of count_and_compare rule every time pipeline is triggered by the button ..we should not need this 
+    #shell: #remove the tmp file
+    #    """
+    #    rm {input.tmp}
+    #    """
 
 ##### Modules #####
 include: "rules/count_and_compare.smk"

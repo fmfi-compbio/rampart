@@ -25,6 +25,12 @@ real_time_reads/
 datasets/
 coordinate_reference.fasta
 
+#vscode
+.vscode/launch.json
+
+package-lock.json
+
+
 #don't commit demuxed or annotated reads...
 demuxed/
 annotations/
