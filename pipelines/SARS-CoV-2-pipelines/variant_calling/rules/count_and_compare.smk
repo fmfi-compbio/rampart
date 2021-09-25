@@ -4,8 +4,7 @@ rule count_and_compare:
         mut= workflow.current_basedir+"/mut_files/"+config["mutations_file"],
         ref= config["references_file"]
     output:
-        json = config["path"]+"/results/mutations.json",
-        #temp = config["path"]+"/results/run"
+        json = config["path"]+"/results/mutations.json"
     threads: 2,
     params:
         path_to_script = workflow.current_basedir,
