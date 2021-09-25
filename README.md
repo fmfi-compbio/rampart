@@ -13,12 +13,12 @@ Furthermore, the small size of many pathogens mean that insightful sequence data
 RAMPART run concurrently with MinION sequencing of such pathogens.
 It provides a real-time overview of genome coverage and reference matching for each barcode.
 
-This version of RAMPART is designed for ... <!-- #todo -->
+This version of RAMPART is designed for variant calling of SARS-CoV-2 samples. It uses a simple python script we created for this purpose. You can read more about it [here](docs/barcode_strand_match.md). <!-- #todo -->
 
 ## Documentation
 
 * [Installation](docs/installation.md) <!-- * [Running an example dataset & understanding the visualisations](docs/examples.md) -->
 * [Setting up for your own run](docs/setting-up.md)
 * [Configuring RAMPART using protocols](docs/protocols.md)
-* [Covid strand matching pipeline](docs/barcode_strand_match.md)
-
+* [SARS-CoV-2 strand matching pipeline](docs/barcode_strand_match.md)
+* [Running SARS-CoV-2 example](docs/covid_example.md)

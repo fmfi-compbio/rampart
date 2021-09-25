@@ -1,9 +1,6 @@
 
 ##### Configuration #####
 
-#print("\nConfig object in Snakefile:")
-#[print("\t{} - {}".format(k, v)) for k,v in config.items()]
-
 # trim trailing slashes from paths to avoid snakemake complaining of double '/' in paths
 config["path"]=config["annotated_path"].rstrip("/")
 config["fastq_path"]=config["basecalled_path"].rstrip("/")
@@ -12,7 +9,7 @@ config["fastq_path"]=config["basecalled_path"].rstrip("/")
 
 rule all:
     input:
-        path = config["path"],
+        path = config["path"], #if there is something new to be processed in the rampart output path, we want to execute this rule
         mutations_csv = config["path"]+"/results/mutations.json"
 
 ##### Modules #####

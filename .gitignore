@@ -25,6 +25,12 @@ real_time_reads/
 datasets/
 coordinate_reference.fasta
 
+#vscode
+.vscode/launch.json
+
+package-lock.json
+
+
 #don't commit demuxed or annotated reads...
 demuxed/
 annotations/
@@ -45,3 +51,7 @@ binned*
 
 # python stuff
 __pycache__/
+
+#covid exmaple data
+example_data/SARS-CoV-2/fastq/pass
+

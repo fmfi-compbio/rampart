@@ -36,7 +36,7 @@ config.addArgument('--barcodeNames', {nargs: '+', help: "specify mapping of barc
 config.addArgument('--annotationOptions', {nargs: '+', help: "pass through config options to the annotation script (key=value pairs)"});
 
 
-/* variants, comming soon (configurable in covid_protocol/pipelines/run_python_scripts/config.yaml for now) */
+/* variants, comming soon (configurable in pipelines/SARS-CoV-2-pipelines/variant_calling/config.yaml for now) */
 //config.addArgument('--coverageThreshold', {help: "minimal coverage needed for a mutation to be classified as significant support for variant"});
 //config.addArgument('--mutationsFilePath', {help: "path to a .txt file with mutations defined for a variant of a virus"});
 
